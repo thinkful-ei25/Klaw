@@ -1,7 +1,16 @@
-#KLAW
-Klaw a super villain in the marvel commic book universe is the master of sound: a man transformed into living sound. This app dedicated to his memory, allows users to unleash the power of sound by just moving. Explore the unimaginable realm of sound through movement. 
+###KLAW
+Klaw, a super villain in the marvel commic book universe is the master of sound: a man transformed into living sound. This app, dedicated to his memory, allows users to unleash the power of sound by just moving. Explore the unimaginable realm of sound through movement. 
 
+#commands 
+FOR DEV: 
+activate the venv
+`source ./venv/bin/activate`
+activate the conda environment
+`conda activate music motion`
 
+FOR PROD: 
+running realtime webcam
+python run_webcam.py --model=mobilenet_thin --resize=160x160 --camera=0
 
 # tf-pose-estimation
 
