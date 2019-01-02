@@ -6,7 +6,7 @@ FOR DEV:
 activate the venv
 `source ./venv/bin/activate`
 activate the conda environment
-`conda activate music motion`
+`conda activate musicmotion`
 
 FOR PROD: 
 running realtime webcam
