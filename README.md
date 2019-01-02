@@ -223,3 +223,20 @@ using a precompiled release of Csound, you should better use the *ctcsound.py* f
 that release to avoid binding errors with libcsound.
 
 Dependency: numpy, Csound 6.07 or higher.
+
+## PERSONAL REFERENCES
+Csound chapter 1
+http://www.csounds.com/chapter1/
+
+ctcsound github
+https://github.com/fggp/ctcsound
+
+
+ctcsound cookbook
+https://github.com/fggp/ctcsound/tree/master/cookbook/examples
+
+iinmccurdy csound examples
+http://iainmccurdy.org/csound.html
+
+TOOTS
+http://csounds.com/toots/index.html
