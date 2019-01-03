@@ -1,12 +1,55 @@
 import argparse
 import logging
 import time
-
+import sys
 import cv2
 import numpy as np
-
+import common
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
+
+import ctcsound
+cs = ctcsound.Csound()
+
+csd = '''
+<CsoundSynthesizer>
+
+<CsOptions>
+  -d -o dac -m0
+</CsOptions>
+
+<CsInstruments>
+sr     = 48000
+ksmps  = 100
+nchnls = 2
+0dbfs  = 1
+
+          instr 1
+idur      =         p3
+iamp      =         p4
+icps      =         cpspch(p5)
+irise     =         p6
+idec      =         p7
+ipan      =         p8
+
+kenv      linen     iamp, irise, idur, idec
+kenv      =         kenv*kenv
+asig      poscil    kenv, icps
+a1, a2    pan2      asig, ipan
+          outs      a1, a2
+          endin
+</CsInstruments>
+
+<CsScore>
+f 0 14400    ; a 4 hours session should be enough
+</CsScore>
+</CsoundSynthesizer>
+'''
+cs.compileCsdText(csd)
+cs.start()
+
+pt = ctcsound.CsoundPerformanceThread(cs.csound())
+pt.play()
 
 # logger = logging.getLogger('TfPoseEstimator-WebCam')
 # logger.setLevel(logging.DEBUG)
@@ -39,7 +82,7 @@ if __name__ == '__main__':
         e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
     else:
         e = TfPoseEstimator(get_graph_path(args.model), target_size=(432, 368))
-    # logger.debug('cam read+')
+    # logger.debusg('cam read+')
     cam = cv2.VideoCapture(args.camera)
     ret_val, image = cam.read()
     # logger.info('cam image=%dx%d' % (image.shape[1], image.shape[0]))
@@ -48,9 +91,21 @@ if __name__ == '__main__':
         ret_val, image = cam.read()
 
         # logger.debug('image process+')
+    
         humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
-        print('humans', humans)
-
+  
+        if (len(humans) > 0 ):
+            if (humans[0].body_parts.get(16)) :
+                body_part = humans[0].body_parts.get(16)
+                X = body_part.x
+                Y = body_part.y       
+                print(X, Y)
+           
+            #print(humans[0].body_parts.get(16))
+            #pt.scoreEvent(False, 'i', (1, 0, 1, 0.5, 8.06, 0.05, 0.3, 0.5))
+                pt.scoreEvent(False, 'i', (1, 0.5, 1, 0.5, 8.06,  0.05, X, 0.5))
+                #pt.scoreEvent(False, 'i', (1, 0, 1, 0.5, 8.06, 0.05, 0.3, 0.5))
+                pt.scoreEvent(False, 'i', (1, 0.5, 1, 0.5, 9.06, 0.05, 0.3, 0.5))
         # logger.debug('postprocess+')
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
@@ -66,3 +121,7 @@ if __name__ == '__main__':
         # logger.debug('finished+')
 
     cv2.destroyAllWindows()
+    pt.stop()
+    pt.join()
+    sys.exit(0)
+    
