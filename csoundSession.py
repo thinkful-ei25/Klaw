@@ -75,9 +75,8 @@ class CsoundSession(ctcsound.Csound):
         if self.pt:
             self.pt.flushMessageQueue()
 
-cs = ctcsound.Csound() 
-# session = CsoundSession(); 
 
+cs = ctcsound.Csound() 
 csd = '''
 <CsoundSynthesizer>
 <CsOptions>
@@ -88,38 +87,21 @@ csd = '''
   kr = 4410 ; control rate (allows slower moving singal less compute time)
   ksmps = 10  ; control period (sr / kr)
   nchnls = 1 ; number of channels
-
     instr 1; 
 a1  oscil   1000, 440, 1
     out     a1
     endin
-
 </CsInstruments>
-
 <CsScore>
-  f 0 14400    ; a 4 hours session should be enough
-
+  f1  0   4096    10 1  ;  this line defines function number 1, a sine wave
+  i1   0    1    100      880  ; 
   e
   </CsScore>
 </CsoundSynthesizer>
 '''
 
-# cs.compileCsdText(csd)
-# cs.start()
-
-# pt = ctcsound.CsoundPerformanceThread(cs.csound())
-
-
-ret = cs.compileCsd(csd)
+ret = cs.compileCsdText(csd)
 if ret == ctcsound.CSOUND_SUCCESS:
-    while not cs.performBuffer():
-        print('.', end='')
-        # pt.play()
-
-        # pt.scoreEvent(False, 'i', (1, 0, 1, 0.5, 8.06, 0.05, 0.3, 0.5))
-        # pt.scoreEvent(False, 'i', (1, 0.5, 1, 0.5, 9.06, 0.05, 0.3, 0.5))
-    print()
-    cs.reset()
-
- 
-
+  cs.start()
+  cs.perform()
+  cs.reset() 

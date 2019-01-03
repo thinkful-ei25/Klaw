@@ -99,15 +99,15 @@ if __name__ == '__main__':
                 body_part = humans[0].body_parts.get(16)
                 X = body_part.x
                 Y = body_part.y       
-                print(X)
+                #print(X)
                 PoseMax = 0.6
                 PoseMin = 0.3
-                AudioMax = 9.0
-                AudioMin = 2.0 
+                AudioMax = 8.5
+                AudioMin = 6.0 
                 PoseRange = (PoseMax - PoseMin)  
                 AudioRange = (AudioMax - AudioMin)  
                 NewValue = (((X - PoseMin) * AudioRange) / PoseRange) + AudioMin
-                print(NewValue)
+                #print(NewValue)
                 pt.scoreEvent(False, 'i', (1, 0.5, 1, 0.5, NewValue,  0.05, 0.3, 0.5))
                 #pt.scoreEvent(False, 'i', (1, 0.5, 1, 0.5, 9.06, 0.05, 0.3, 0.5))
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
